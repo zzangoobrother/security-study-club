@@ -3,7 +3,6 @@ package com.example.securitystudyclub.config;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,13 +17,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder();
   }
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication()
-        .withUser("user1")
-        .password("$2a$10$b/kN5EVr2jyn.Ju1T.gXKui.SNFoh0fU1DCgaAgVWAZMxuFfAX3qe")
-        .roles("USER");
-  }
+//  @Override
+//  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//    auth.inMemoryAuthentication()
+//        .withUser("user1")
+//        .password("$2a$10$b/kN5EVr2jyn.Ju1T.gXKui.SNFoh0fU1DCgaAgVWAZMxuFfAX3qe")
+//        .roles("USER");
+//  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
