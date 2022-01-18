@@ -3,6 +3,7 @@ package com.example.securitystudyclub.security;
 import com.example.securitystudyclub.entity.ClubMember;
 import com.example.securitystudyclub.entity.ClubMemberRole;
 import com.example.securitystudyclub.repository.ClubMemberRepository;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,13 @@ public class ClubMemberTest {
 
       clubMemberRepository.save(clubMember);
     });
+  }
+
+  @Test
+  void testRead() {
+    Optional<ClubMember> result = clubMemberRepository.findByEmail("user95@test.org", false);
+
+    ClubMember clubMember = result.get();
+    System.out.println(clubMember);
   }
 }
