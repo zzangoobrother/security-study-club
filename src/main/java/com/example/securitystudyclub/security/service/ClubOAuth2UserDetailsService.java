@@ -3,8 +3,11 @@ package com.example.securitystudyclub.security.service;
 import com.example.securitystudyclub.entity.ClubMember;
 import com.example.securitystudyclub.entity.ClubMemberRole;
 import com.example.securitystudyclub.repository.ClubMemberRepository;
+import com.example.securitystudyclub.security.dto.ClubAuthMemberDTO;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -46,7 +49,18 @@ public class ClubOAuth2UserDetailsService extends DefaultOAuth2UserService {
     log.info("EMAIL : " + email);
     ClubMember clubMember = saveSocialMember(email);
 
-    return oAuth2User;
+    ClubAuthMemberDTO clubAuthMemberDTO = new ClubAuthMemberDTO(
+        clubMember.getEmail(),
+        clubMember.getPassword(),
+        true,
+        clubMember.getRoleSet().stream().map(
+            role -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toList()
+        ),
+        oAuth2User.getAttributes()
+    );
+    clubAuthMemberDTO.setName(clubMember.getName());
+
+    return clubAuthMemberDTO;
   }
 
   private ClubMember saveSocialMember(String email) {
