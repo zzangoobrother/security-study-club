@@ -1,5 +1,6 @@
 package com.example.securitystudyclub.config;
 
+import com.example.securitystudyclub.security.handler.ClubLoginSuccessHandler;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +34,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.formLogin();
     http.csrf().disable();
-    http.logout();
 
-    http.oauth2Login();
+    http.oauth2Login().successHandler(successHandler());
+  }
+
+  @Bean
+  public ClubLoginSuccessHandler successHandler() {
+    return new ClubLoginSuccessHandler(passwordEncoder());
   }
 }
