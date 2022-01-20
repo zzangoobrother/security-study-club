@@ -1,5 +1,6 @@
 package com.example.securitystudyclub.config;
 
+import com.example.securitystudyclub.security.filter.ApiCheckFilter;
 import com.example.securitystudyclub.security.handler.ClubLoginSuccessHandler;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @Log4j2
@@ -40,10 +42,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.oauth2Login().successHandler(successHandler());
     http.rememberMe().tokenValiditySeconds(60*60*24*7).userDetailsService(userDetailsService());
+
+    http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Bean
   public ClubLoginSuccessHandler successHandler() {
     return new ClubLoginSuccessHandler(passwordEncoder());
+  }
+
+  @Bean
+  public ApiCheckFilter apiCheckFilter() {
+    return new ApiCheckFilter("/notes/**/*");
   }
 }
