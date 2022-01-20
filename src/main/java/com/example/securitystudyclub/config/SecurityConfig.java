@@ -1,6 +1,8 @@
 package com.example.securitystudyclub.config;
 
 import com.example.securitystudyclub.security.filter.ApiCheckFilter;
+import com.example.securitystudyclub.security.filter.ApiLoginFailHandler;
+import com.example.securitystudyclub.security.filter.ApiLoginFilter;
 import com.example.securitystudyclub.security.handler.ClubLoginSuccessHandler;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.rememberMe().tokenValiditySeconds(60*60*24*7).userDetailsService(userDetailsService());
 
     http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(apiLoginFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Bean
@@ -54,5 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public ApiCheckFilter apiCheckFilter() {
     return new ApiCheckFilter("/notes/**/*");
+  }
+
+  @Bean
+  public ApiLoginFilter apiLoginFilter() throws Exception {
+    ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+    apiLoginFilter.setAuthenticationManager(authenticationManager());
+    apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
+    return apiLoginFilter;
   }
 }
