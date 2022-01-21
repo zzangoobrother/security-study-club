@@ -1,4 +1,4 @@
-package com.example.securitystudyclub.security.filter;
+package com.example.securitystudyclub.security.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;

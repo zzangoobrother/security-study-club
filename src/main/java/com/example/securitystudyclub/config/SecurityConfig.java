@@ -1,7 +1,7 @@
 package com.example.securitystudyclub.config;
 
 import com.example.securitystudyclub.security.filter.ApiCheckFilter;
-import com.example.securitystudyclub.security.filter.ApiLoginFailHandler;
+import com.example.securitystudyclub.security.handler.ApiLoginFailHandler;
 import com.example.securitystudyclub.security.filter.ApiLoginFilter;
 import com.example.securitystudyclub.security.handler.ClubLoginSuccessHandler;
 import com.example.securitystudyclub.security.util.JWTUtil;
@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public ApiCheckFilter apiCheckFilter() {
-    return new ApiCheckFilter("/notes/**/*");
+    return new ApiCheckFilter("/notes/**/*", jwtUtil());
   }
 
   @Bean
