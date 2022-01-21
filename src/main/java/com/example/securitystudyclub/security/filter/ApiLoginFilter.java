@@ -1,5 +1,7 @@
 package com.example.securitystudyclub.security.filter;
 
+import com.example.securitystudyclub.security.dto.ClubAuthMemberDTO;
+import com.example.securitystudyclub.security.util.JWTUtil;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,8 +16,11 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 @Log4j2
 public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-  public ApiLoginFilter(String defaultFilterProcessesUrl) {
+  private final JWTUtil jwtUtil;
+
+  public ApiLoginFilter(String defaultFilterProcessesUrl, JWTUtil jwtUtil) {
     super(defaultFilterProcessesUrl);
+    this.jwtUtil = jwtUtil;
   }
 
   @Override
@@ -38,5 +43,18 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
     log.info("-----------------------successfulAuthentication-------------------------------");
     log.info("successfulAuthentication : " + authResult);
     log.info(authResult.getPrincipal());
+
+    String email = ((ClubAuthMemberDTO) authResult.getPrincipal()).getUsername();
+    String token = null;
+
+    try {
+      token = jwtUtil.generateToken(email);
+
+      response.setContentType("text/plain");
+      response.getOutputStream().write(token.getBytes());
+      log.info(token);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -4,6 +4,7 @@ import com.example.securitystudyclub.security.filter.ApiCheckFilter;
 import com.example.securitystudyclub.security.filter.ApiLoginFailHandler;
 import com.example.securitystudyclub.security.filter.ApiLoginFilter;
 import com.example.securitystudyclub.security.handler.ClubLoginSuccessHandler;
+import com.example.securitystudyclub.security.util.JWTUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,9 +62,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public ApiLoginFilter apiLoginFilter() throws Exception {
-    ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+    ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login", jwtUtil());
     apiLoginFilter.setAuthenticationManager(authenticationManager());
     apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
     return apiLoginFilter;
+  }
+
+  @Bean
+  public JWTUtil jwtUtil() {
+    return new JWTUtil();
   }
 }
